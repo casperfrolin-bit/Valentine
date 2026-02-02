@@ -194,11 +194,14 @@ const nejButton = document.querySelector('.button-nej');
 
 let x = 0;
 let y = 0;
+
 const dangerRadius = 150;
+const speed = 16;
 
 document.addEventListener('mousemove', (e) => {
   const rect = nejButton.getBoundingClientRect();
 
+  // knappens visuella centrum (inkl transform)
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
 
@@ -211,22 +214,24 @@ document.addEventListener('mousemove', (e) => {
     const nx = dx / distance;
     const ny = dy / distance;
 
-    x -= nx * 14;
-    y -= ny * 14;
+    // fly från musen i samma takt
+    x -= nx * speed;
+    y -= ny * speed;
   }
 
   // === WRAP AROUND SKÄRMEN ===
   const screenW = window.innerWidth;
   const screenH = window.innerHeight;
 
-  if (rect.right < 0) x += screenW + rect.width;
-  if (rect.left > screenW) x -= screenW + rect.width;
-  if (rect.bottom < 0) y += screenH + rect.height;
-  if (rect.top > screenH) y -= screenH + rect.height;
+  if (cx < 0) x += screenW;
+  if (cx > screenW) x -= screenW;
+  if (cy < 0) y += screenH;
+  if (cy > screenH) y -= screenH;
 
   nejButton.style.transform = `translate(${x}px, ${y}px)`;
 });
 </script>
+
 
 </body>
 </html>
