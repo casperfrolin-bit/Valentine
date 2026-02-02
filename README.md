@@ -74,7 +74,7 @@ body {
 }
 
 .button:hover {
-  transform: translateX(-30px) scale(1.05); /* hover-effekt med samma förskjutning */
+  transform: translateX(-120px) scale(1.05); /* hover-effekt med samma förskjutning */
 }
 </style>
 </head>
