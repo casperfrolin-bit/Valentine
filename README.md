@@ -17,7 +17,6 @@ body {
   background: white;
 
   border-radius: 40px;
-
   position: relative; /* gör det möjligt att positionera bilden inuti */
 }
 
@@ -26,9 +25,9 @@ body {
   top: 20px;           /* lite avstånd från toppen */
   left: 50%;           /* horisontellt centrerad */
   transform: translateX(-50%); /* centrerar exakt */
-  max-width: 80%;      /* maxbredd så att den inte blir för stor */
-  height: auto;        /* behåller proportioner */
-  border-radius: 20px; /* valfritt: rundade hörn på bilden */
+  width: 50px;         /* exakt bredd */
+  height: 50px;        /* exakt höjd */
+  border-radius: 10px; /* valfritt: rundade hörn på bilden */
 }
 </style>
 </head>
