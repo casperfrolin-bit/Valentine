@@ -12,7 +12,7 @@ body {
 }
 
 .center-box {
-  width: 1300px;      /* bredd */
+  width: 900px;      /* bredd */
   height: 700px;     /* höjd */
   background: white;
 
