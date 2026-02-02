@@ -48,11 +48,11 @@ body {
 
 /* Gemensam knappstil */
 .button {
-  width: 150px; /* mindre bredd */
-  height: 60px; /* mindre höjd */
+  width: 150px; 
+  height: 60px; 
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 700;
-  font-size: 18px; /* lite mindre text */
+  font-size: 18px;
   border: none;
   outline: none;
   border-radius: 50px;
@@ -61,7 +61,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  transition: transform 0.2s;
+  transition: transform 0.2s, left 0.3s, top 0.3s;
 }
 
 .button:hover {
@@ -70,21 +70,23 @@ body {
 
 /* Färger för knapparna */
 .button-ja {
-  background-color: #ff69b4; /* stark rosa */
+  background-color: #ff69b4; 
   color: white;
 }
 
 .button-nej {
-  background-color: #dcdcdc; /* mörkare grå för bättre synlighet */
+  background-color: #b0b0b0; /* mörkare grå */
   color: #333;
+  position: relative;
 }
 
 /* Container för knappar bredvid varandra */
 .button-container {
   display: flex;
-  gap: 80px; /* mycket större mellanrum mellan knapparna */
+  gap: 80px; 
   margin-top: 20px;
-  align-self: center; /* centrerar container under texten */
+  align-self: center; 
+  position: relative;
 }
 </style>
 </head>
@@ -98,9 +100,36 @@ body {
   </div>
   <div class="button-container">
     <button class="button button-ja">Ja</button>
-    <button class="button button-nej">Nej</button>
+    <button class="button button-nej" id="nejButton">Nej</button>
   </div>
 </div>
 
+<script>
+// Hämta Nej-knappen
+const nejButton = document.getElementById('nejButton');
+
+// Lyssna på musrörelser
+document.addEventListener('mousemove', e => {
+  const rect = nejButton.getBoundingClientRect();
+  const mouseX = e.clientX;
+  const mouseY = e.clientY;
+  
+  const buttonCenterX = rect.left + rect.width / 2;
+  const buttonCenterY = rect.top + rect.height / 2;
+  
+  const distance = Math.hypot(mouseX - buttonCenterX, mouseY - buttonCenterY);
+
+  // Om musen är nära (t.ex. <100px), flytta knappen
+  if(distance < 100) {
+    const offsetX = (buttonCenterX - mouseX) / distance * 120; // flytta bort
+    const offsetY = (buttonCenterY - mouseY) / distance * 60; // lite vertikalt
+    nejButton.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+  } else {
+    nejButton.style.transform = 'translate(0,0)';
+  }
+});
+</script>
+
 </body>
 </html>
+
