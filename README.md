@@ -51,7 +51,7 @@ body {
 .button {
   width: 200px;
   height: 70px;
-  background-color: #ff69b4; /* stark rosa */
+  background-color: #fc03b6; /* stark rosa */
   color: white;
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 700;
