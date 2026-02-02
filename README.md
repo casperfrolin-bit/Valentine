@@ -48,11 +48,11 @@ body {
 
 /* Gemensam knappstil */
 .button {
-  width: 200px;
-  height: 70px;
+  width: 150px; /* mindre bredd */
+  height: 60px; /* mindre höjd */
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 18px; /* lite mindre text */
   border: none;
   outline: none;
   border-radius: 50px;
@@ -82,7 +82,7 @@ body {
 /* Container för knappar bredvid varandra */
 .button-container {
   display: flex;
-  gap: 40px; /* ökat avstånd mellan knapparna */
+  gap: 80px; /* mycket större mellanrum mellan knapparna */
   margin-top: 20px;
   align-self: center; /* centrerar container under texten */
 }
