@@ -1,3 +1,6 @@
+<html>
+<head>
+<style>
 body {
   margin: 0;
   height: 100vh;
@@ -9,9 +12,11 @@ body {
 }
 
 .center-box {
-  width: 700px;
-  height: 500px;
+  width: 600px;      /* bredd */
+  height: 300px;     /* höjd */
   background: white;
+
+  border-radius: 150px; /* gör hörnen väldigt runda */
 }
 </style>
 </head>
