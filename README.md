@@ -21,30 +21,29 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 20px; /* avstånd från toppen */
+  padding-top: 20px;
 }
 
 .center-box img {
   width: 200px;         
   height: 200px;        
   border-radius: 10px; 
-  margin-bottom: 20px; /* avstånd mellan bild och textruta */
+  margin-bottom: 20px;
 }
 
 .text-box {
   width: 700px;
-  background-color: #FFFFFF; /* ljusare rosa */
+  background-color: #FFFFFF;
   border-radius: 20px;
   padding: 10px;
 
-  /* Bold Noto Sans Japanese */
   font-family: 'Noto Sans JP', sans-serif;
   font-weight: 700;
   font-size: 40px;
   color: #333;
 
   text-align: center;
-  word-wrap: break-word; /* bryter texten om den blir för lång */
+  word-wrap: break-word;
 }
 
 /* Gemensam knappstil */
@@ -69,21 +68,21 @@ body {
   transform: scale(1.05);
 }
 
-/* Behåll färger för knapparna */
+/* Färger för knapparna */
 .button-ja {
   background-color: #ff69b4; /* stark rosa */
   color: white;
 }
 
 .button-nej {
-  background-color: #f8f8ff; /* Ghost Gray */
+  background-color: #dcdcdc; /* mörkare grå för bättre synlighet */
   color: #333;
 }
 
 /* Container för knappar bredvid varandra */
 .button-container {
   display: flex;
-  gap: 20px; /* avstånd mellan knapparna */
+  gap: 40px; /* ökat avstånd mellan knapparna */
   margin-top: 20px;
   align-self: center; /* centrerar container under texten */
 }
