@@ -57,11 +57,15 @@ body {
   font-weight: 700;
   font-size: 20px;
   border: none;
-  outline: none; /* tar bort outline */
+  outline: none;
   border-radius: 50px; /* rundare hörn */
   cursor: pointer;
   margin-top: 20px;
-  align-self: flex-start; /* placerad mot vänster */
+
+  /* Flyttar knappen till mitten men lite åt vänster */
+  align-self: center;
+  transform: translateX(-30px); /* flyttar 30px åt vänster */
+  
   display: flex;
   justify-content: center;
   align-items: center;
@@ -70,7 +74,7 @@ body {
 }
 
 .button:hover {
-  transform: scale(1.05); /* liten hover-effekt */
+  transform: translateX(-30px) scale(1.05); /* hover-effekt med samma förskjutning */
 }
 </style>
 </head>
