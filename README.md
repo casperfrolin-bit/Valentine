@@ -11,6 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden; /* förhindrar scroll när knappen flyttar sig */
 }
 
 .center-box {
@@ -61,7 +62,7 @@ body {
   justify-content: center;
   align-items: center;
   text-align: center;
-  transition: transform 0.2s, left 0.3s, top 0.3s;
+  transition: transform 0.2s;
 }
 
 .button:hover {
@@ -75,12 +76,12 @@ body {
 }
 
 .button-nej {
-  background-color: #b0b0b0; /* mörkare grå */
+  background-color: #b0b0b0; 
   color: #333;
-  position: relative;
+  position: absolute; /* för fri rörelse */
 }
 
-/* Container för knappar bredvid varandra */
+/* Container för knappar */
 .button-container {
   display: flex;
   gap: 80px; 
@@ -107,25 +108,46 @@ body {
 <script>
 // Hämta Nej-knappen
 const nejButton = document.getElementById('nejButton');
+const body = document.body;
+
+// Startposition
+let nejX = nejButton.offsetLeft;
+let nejY = nejButton.offsetTop;
+
+// Uppdatera knappens position
+function updatePosition() {
+  nejButton.style.left = nejX + 'px';
+  nejButton.style.top = nejY + 'px';
+}
+updatePosition();
 
 // Lyssna på musrörelser
 document.addEventListener('mousemove', e => {
-  const rect = nejButton.getBoundingClientRect();
   const mouseX = e.clientX;
   const mouseY = e.clientY;
   
+  const rect = nejButton.getBoundingClientRect();
   const buttonCenterX = rect.left + rect.width / 2;
   const buttonCenterY = rect.top + rect.height / 2;
   
   const distance = Math.hypot(mouseX - buttonCenterX, mouseY - buttonCenterY);
 
-  // Om musen är nära (t.ex. <100px), flytta knappen
-  if(distance < 100) {
-    const offsetX = (buttonCenterX - mouseX) / distance * 120; // flytta bort
-    const offsetY = (buttonCenterY - mouseY) / distance * 60; // lite vertikalt
-    nejButton.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-  } else {
-    nejButton.style.transform = 'translate(0,0)';
+  if(distance < 100) { // Om musen är nära
+    // Flytta knappen bort från musen
+    let offsetX = (buttonCenterX - mouseX) / distance * 120;
+    let offsetY = (buttonCenterY - mouseY) / distance * 60;
+
+    nejX += offsetX;
+    nejY += offsetY;
+
+    // Håll knappen inom fönstret
+    const maxX = window.innerWidth - nejButton.offsetWidth;
+    const maxY = window.innerHeight - nejButton.offsetHeight;
+
+    nejX = Math.max(0, Math.min(nejX, maxX));
+    nejY = Math.max(0, Math.min(nejY, maxY));
+
+    updatePosition();
   }
 });
 </script>
