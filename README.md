@@ -11,7 +11,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden; /* förhindrar scroll när knappen flyttar sig */
+  overflow: hidden; /* förhindrar scroll */
 }
 
 .center-box {
@@ -78,7 +78,7 @@ body {
 .button-nej {
   background-color: #b0b0b0; 
   color: #333;
-  position: absolute; /* för fri rörelse */
+  position: absolute; /* fri rörelse */
 }
 
 /* Container för knappar */
@@ -108,46 +108,40 @@ body {
 <script>
 // Hämta Nej-knappen
 const nejButton = document.getElementById('nejButton');
-const body = document.body;
 
-// Startposition
-let nejX = nejButton.offsetLeft;
-let nejY = nejButton.offsetTop;
+// Startposition (centrerad under Ja-knappen)
+nejButton.style.left = nejButton.offsetLeft + 'px';
+nejButton.style.top = nejButton.offsetTop + 'px';
 
-// Uppdatera knappens position
-function updatePosition() {
-  nejButton.style.left = nejX + 'px';
-  nejButton.style.top = nejY + 'px';
-}
-updatePosition();
+// Håll koll på nuvarande position
+let posX = nejButton.offsetLeft;
+let posY = nejButton.offsetTop;
 
-// Lyssna på musrörelser
 document.addEventListener('mousemove', e => {
   const mouseX = e.clientX;
   const mouseY = e.clientY;
-  
+
   const rect = nejButton.getBoundingClientRect();
   const buttonCenterX = rect.left + rect.width / 2;
   const buttonCenterY = rect.top + rect.height / 2;
-  
+
   const distance = Math.hypot(mouseX - buttonCenterX, mouseY - buttonCenterY);
 
-  if(distance < 100) { // Om musen är nära
+  if(distance < 120) { // när musen är nära
     // Flytta knappen bort från musen
-    let offsetX = (buttonCenterX - mouseX) / distance * 120;
-    let offsetY = (buttonCenterY - mouseY) / distance * 60;
+    const offsetX = (buttonCenterX - mouseX) / distance * 150;
+    const offsetY = (buttonCenterY - mouseY) / distance * 100;
 
-    nejX += offsetX;
-    nejY += offsetY;
+    posX += offsetX;
+    posY += offsetY;
 
-    // Håll knappen inom fönstret
-    const maxX = window.innerWidth - nejButton.offsetWidth;
-    const maxY = window.innerHeight - nejButton.offsetHeight;
+    // Begränsa position inom fönstret
+    posX = Math.max(0, Math.min(posX, window.innerWidth - nejButton.offsetWidth));
+    posY = Math.max(0, Math.min(posY, window.innerHeight - nejButton.offsetHeight));
 
-    nejX = Math.max(0, Math.min(nejX, maxX));
-    nejY = Math.max(0, Math.min(nejY, maxY));
-
-    updatePosition();
+    // Uppdatera knappens position
+    nejButton.style.left = posX + 'px';
+    nejButton.style.top = posY + 'px';
   }
 });
 </script>
