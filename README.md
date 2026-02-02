@@ -46,6 +46,26 @@ body {
   text-align: center;
   word-wrap: break-word; /* bryter texten om den blir för lång */
 }
+
+/* Ny knappstil */
+.button {
+  width: 350px;
+  height: 150px;
+  background-color: #ff69b4; /* stark rosa */
+  color: white;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  border: none;
+  border-radius: 30px; /* runda hörn */
+  cursor: pointer;
+  margin-top: 20px;
+  align-self: flex-start; /* placerar knappen till vänster */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
 </style>
 </head>
 
@@ -56,8 +76,8 @@ body {
   <div class="text-box">
     ... vill du bli min valentine?
   </div>
+  <button class="button">Klicka här</button>
 </div>
 
 </body>
 </html>
-
