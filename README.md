@@ -64,7 +64,7 @@ body {
 
   /* Flyttar knappen till mitten men lite åt vänster */
   align-self: center;
-  transform: translateX(-70px); /* flyttar 30px åt vänster */
+  transform: translateX(-120px); /* flyttar 30px åt vänster */
   
   display: flex;
   justify-content: center;
