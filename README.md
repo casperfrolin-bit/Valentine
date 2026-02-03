@@ -66,11 +66,10 @@ body {
 /* === KNAPPAR === */
 .button-container {
   display: flex;
-  gap: 260px;          /* 👈 mer mellanrum */
+  gap: 260px;
   margin-top: 30px;
-  transform: translateX(-80px); /* 👈 flyttar knapparna åt vänster */
+  transform: translateX(-80px);
 }
-
 
 .button {
   width: 100px;
@@ -117,29 +116,40 @@ for (let i = 0; i < 45; i++) {
   h.className = "heart";
   h.textContent = "❤";
   h.style.left = Math.random() * 100 + "vw";
-  h.style.top = 45 + (Math.random() * 20 - 10) + "vh"; // 👈 mitten
+  h.style.top = 45 + (Math.random() * 20 - 10) + "vh";
   h.style.fontSize = 12 + Math.random() * 18 + "px";
   h.style.animationDuration = 10 + Math.random() * 10 + "s";
   h.style.animationDelay = (-Math.random() * 10) + "s";
   hearts.appendChild(h);
 }
 
-/* === NEJ-KNAPP MED RUNDADE HÖRN === */
+/* === NEJ-KNAPP MED RUNDADE HÖRN (STABIL) === */
 const btn = document.getElementById("nej");
 const dangerRadius = 150;
-const cornerRadius = 200;
 
+// Dynamisk hörnradie (kan inte bli för stor)
+const cornerRadius = Math.min(
+  200,
+  Math.min(window.innerWidth, window.innerHeight) / 4
+);
+
+// Ta startposition från layouten
 let rect = btn.getBoundingClientRect();
 let x = rect.left;
 let y = rect.top;
 
-// Gör den fixed EFTER att vi tagit startpositionen
+// Säkra startposition
+x = Math.max(20, Math.min(x, window.innerWidth - rect.width - 20));
+y = Math.max(20, Math.min(y, window.innerHeight - rect.height - 20));
+
+// Gör fixed EFTER vi satt korrekt position
 btn.style.position = "fixed";
 btn.style.left = x + "px";
 btn.style.top = y + "px";
 
 document.addEventListener("mousemove", (e) => {
   rect = btn.getBoundingClientRect();
+
   const cx = rect.left + rect.width / 2;
   const cy = rect.top + rect.height / 2;
 
@@ -157,9 +167,11 @@ document.addEventListener("mousemove", (e) => {
   const maxX = window.innerWidth - rect.width;
   const maxY = window.innerHeight - rect.height;
 
+  // Rektangel först
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
 
+  // Rundade hörn
   const corners = [
     { cx: minX + cornerRadius, cy: minY + cornerRadius },
     { cx: maxX - cornerRadius, cy: minY + cornerRadius },
@@ -172,12 +184,13 @@ document.addEventListener("mousemove", (e) => {
     const vy = y + rect.height / 2 - c.cy;
     const dist = Math.hypot(vx, vy);
 
-    const inCornerX = (x < c.cx && c.cx < window.innerWidth / 2) ||
-                      (x > c.cx && c.cx > window.innerWidth / 2);
-    const inCornerY = (y < c.cy && c.cy < window.innerHeight / 2) ||
-                      (y > c.cy && c.cy > window.innerHeight / 2);
+    const inCorner =
+      (x < c.cx && y < c.cy) ||
+      (x > c.cx && y < c.cy) ||
+      (x < c.cx && y > c.cy) ||
+      (x > c.cx && y > c.cy);
 
-    if (dist > cornerRadius && inCornerX && inCornerY) {
+    if (dist > cornerRadius && inCorner) {
       const scale = cornerRadius / dist;
       x = c.cx + vx * scale - rect.width / 2;
       y = c.cy + vy * scale - rect.height / 2;
