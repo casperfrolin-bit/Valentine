@@ -25,7 +25,7 @@ body {
   position: absolute;
   color: #ff8fb1;
   animation: fall linear infinite;
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 @keyframes fall {
@@ -67,9 +67,9 @@ body {
   color: white;
 }
 
-/* 🔽 ENDA ÄNDRINGEN ÄR HÄR */
 .button-nej {
   background: #dcdcdc;
+  pointer-events: none; /* 👈 OMÖJLIG ATT KLICKA */
 }
 
 .button-container {
@@ -94,25 +94,37 @@ body {
 </div>
 
 <script>
-/* === FALLANDE HJÄRTAN === */
+/* === MASSOR AV HJÄRTAN === */
 const hearts = document.getElementById("hearts");
-for (let i = 0; i < 40; i++) {
+
+function spawnHeart() {
   const h = document.createElement("div");
   h.className = "heart";
   h.textContent = "❤";
   h.style.left = Math.random() * 100 + "vw";
-  h.style.fontSize = 12 + Math.random() * 18 + "px";
-  h.style.animationDuration = 10 + Math.random() * 10 + "s";
+  h.style.fontSize = 12 + Math.random() * 24 + "px";
+  h.style.animationDuration = 6 + Math.random() * 8 + "s";
   hearts.appendChild(h);
+
+  setTimeout(() => h.remove(), 15000);
 }
 
-/* === NEJ-KNAPP MED RUNDADE HÖRN === */
-const btn = document.querySelector(".button-nej");
-const dangerRadius = 150;
-const cornerRadius = 120;
+// Spawnar många direkt
+for (let i = 0; i < 80; i++) spawnHeart();
 
-let x = window.innerWidth / 2 + 100;
-let y = window.innerHeight / 2 + 100;
+// Spawnar kontinuerligt nya
+setInterval(() => {
+  for (let i = 0; i < 5; i++) spawnHeart();
+}, 500);
+
+/* === SUPERSNABB NEJ-KNAPP === */
+const btn = document.querySelector(".button-nej");
+
+let x = btn.getBoundingClientRect().left;
+let y = btn.getBoundingClientRect().top;
+
+let lastMouseX = 0;
+let lastMouseY = 0;
 
 document.addEventListener("mousemove", (e) => {
   const r = btn.getBoundingClientRect();
@@ -123,10 +135,18 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - cy;
   const d = Math.hypot(dx, dy);
 
-  if (d < dangerRadius) {
-    x -= (dx / d) * 14;
-    y -= (dy / d) * 14;
+  const mouseSpeed = Math.hypot(
+    e.clientX - lastMouseX,
+    e.clientY - lastMouseY
+  ) || 1;
+
+  if (d < 200) {
+    x -= (dx / d) * mouseSpeed * 1.2;
+    y -= (dy / d) * mouseSpeed * 1.2;
   }
+
+  lastMouseX = e.clientX;
+  lastMouseY = e.clientY;
 
   const minX = 0;
   const minY = 0;
@@ -136,30 +156,7 @@ document.addEventListener("mousemove", (e) => {
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
 
-  const corners = [
-    { cx: minX + cornerRadius, cy: minY + cornerRadius },
-    { cx: maxX - cornerRadius, cy: minY + cornerRadius },
-    { cx: minX + cornerRadius, cy: maxY - cornerRadius },
-    { cx: maxX - cornerRadius, cy: maxY - cornerRadius }
-  ];
-
-  for (const c of corners) {
-    const vx = x + r.width / 2 - c.cx;
-    const vy = y + r.height / 2 - c.cy;
-    const dist = Math.hypot(vx, vy);
-
-    if (dist > cornerRadius &&
-        ((c.cx < window.innerWidth / 2 && x < c.cx) ||
-         (c.cx > window.innerWidth / 2 && x > c.cx)) &&
-        ((c.cy < window.innerHeight / 2 && y < c.cy) ||
-         (c.cy > window.innerHeight / 2 && y > c.cy))) {
-
-      const scale = cornerRadius / dist;
-      x = c.cx + vx * scale - r.width / 2;
-      y = c.cy + vy * scale - r.height / 2;
-    }
-  }
-
+  btn.style.position = "fixed";
   btn.style.left = x + "px";
   btn.style.top = y + "px";
 });
