@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
@@ -7,11 +8,41 @@ body {
   margin: 0;
   height: 100vh;
   background-color: #ffd1dc;
+  overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* === FALLANDE HJÄRTAN === */
+.hearts {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heart {
+  position: absolute;
+  color: #ff4d6d;
+  font-size: 20px;
+  animation: fall linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(-10vh);
+  }
+  100% {
+    transform: translateY(110vh);
+  }
+}
+
+/* === DIN BOX === */
 .center-box {
   width: 900px;
   min-height: 550px;
@@ -21,6 +52,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
+  z-index: 1;
 }
 
 .center-box img {
@@ -43,87 +75,4 @@ body {
 .button {
   width: 100px;
   height: 60px;
-  font-family: 'Noto Sans JP', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.button-ja {
-  background-color: #ff69b4;
-  color: white;
-}
-
-.button-nej {
-  background-color: #dcdcdc;
-  color: #333;
-  position: relative;
-}
-
-.button-container {
-  display: flex;
-  gap: 180px;
-  margin-top: 20px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="center-box">
-  <img src="https://thumbs.dreamstime.com/b/print-206284399.jpg">
-  <div class="text-box">
-    ... vill du bli min valentine?
-  </div>
-  <div class="button-container">
-    <button class="button button-ja">Ja</button>
-    <button class="button button-nej">Nej</button>
-  </div>
-</div>
-
-<script>
-const nejButton = document.querySelector('.button-nej');
-
-let x = 0;
-let y = 0;
-const dangerRadius = 150;
-
-document.addEventListener('mousemove', (e) => {
-  const rect = nejButton.getBoundingClientRect();
-
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-
-  const dx = e.clientX - cx;
-  const dy = e.clientY - cy;
-
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  if (distance < dangerRadius) {
-    const nx = dx / distance;
-    const ny = dy / distance;
-
-    x -= nx * 14;
-    y -= ny * 14;
-  }
-
-  // === WRAP AROUND SKÄRMEN ===
-  const screenW = window.innerWidth;
-  const screenH = window.innerHeight;
-
-  if (rect.right < 0) x += screenW + rect.width;
-  if (rect.left > screenW) x -= screenW + rect.width;
-  if (rect.bottom < 0) y += screenH + rect.height;
-  if (rect.top > screenH) y -= screenH + rect.height;
-
-  nejButton.style.transform = `translate(${x}px, ${y}px)`;
-});
-</script>
-
-</body>
-</html>
+  font-family: 'Noto Sans
