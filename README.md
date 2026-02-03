@@ -145,90 +145,23 @@ body {
 const heartsContainer = document.getElementById('hearts');
 const heartCount = 30;
 
-/* Vanliga fallande hjärtan */
 for (let i = 0; i < heartCount; i++) {
   const heart = document.createElement('div');
   heart.classList.add('heart');
   heart.innerHTML = '❤';
 
   heart.style.left = Math.random() * 100 + 'vw';
+  heart.style.top = Math.random() * 100 + 'vh'; // 👈 utspritt över skärmen
   heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-  heart.style.animationDuration = Math.random() * 6 + 10 + 's';
-  heart.style.animationDelay = Math.random() * 5 + 's';
+
+  const duration = Math.random() * 6 + 10; // 10–16s
+  heart.style.animationDuration = duration + 's';
+  heart.style.animationDelay = (-Math.random() * duration) + 's'; // 👈 startar "mitt i"
 
   heartsContainer.appendChild(heart);
 }
-
-/* === HJÄRTAN I MITTEN VID START === */
-const centerHeartCount = 10;
-
-for (let i = 0; i < centerHeartCount; i++) {
-  const heart = document.createElement('div');
-  heart.classList.add('heart');
-  heart.innerHTML = '❤';
-
-  heart.style.left = 50 + (Math.random() * 20 - 10) + 'vw'; // runt mitten
-  heart.style.top = 40 + (Math.random() * 20 - 10) + 'vh'; // runt mitten
-  heart.style.fontSize = Math.random() * 20 + 15 + 'px';
-  heart.style.animationDuration = Math.random() * 8 + 12 + 's';
-  heart.style.animationDelay = '0s';
-
-  heartsContainer.appendChild(heart);
-}
-
-/* === HJÄRTEXPLOSION VID JA === */
-const jaButton = document.querySelector('.button-ja');
-
-jaButton.addEventListener('click', () => {
-  const rect = jaButton.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-
-  for (let i = 0; i < 25; i++) {
-    const heart = document.createElement('div');
-    heart.classList.add('explosion-heart');
-    heart.innerHTML = '❤';
-
-    const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * 150 + 50;
-
-    const x = Math.cos(angle) * distance;
-    const y = Math.sin(angle) * distance;
-
-    heart.style.left = cx + 'px';
-    heart.style.top = cy + 'px';
-    heart.style.fontSize = Math.random() * 15 + 15 + 'px';
-    heart.style.setProperty('--x', x + 'px');
-    heart.style.setProperty('--y', y + 'px');
-
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1000);
-  }
-});
-
-/* === NEJ-KNAPPEN SOM FLYR === */
-const nejButton = document.querySelector('.button-nej');
-let x = 0;
-let y = 0;
-const dangerRadius = 150;
-
-document.addEventListener('mousemove', (e) => {
-  const rect = nejButton.getBoundingClientRect();
-  const cx = rect.left + rect.width / 2;
-  const cy = rect.top + rect.height / 2;
-
-  const dx = e.clientX - cx;
-  const dy = e.clientY - cy;
-  const distance = Math.sqrt(dx * dx + dy * dy);
-
-  if (distance < dangerRadius) {
-    x -= (dx / distance) * 14;
-    y -= (dy / distance) * 14;
-  }
-
-  nejButton.style.transform = `translate(${x}px, ${y}px)`;
-});
 </script>
+
 
 
 </body>
