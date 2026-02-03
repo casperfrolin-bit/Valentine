@@ -62,7 +62,7 @@ body {
 .button-nej {
   background-color: #dcdcdc;
   color: #333;
-  position: fixed;   /* ← VIKTIGT: ändrat här */
+  position: relative;
 }
 
 .button-container {
@@ -88,18 +88,10 @@ body {
 
 <script>
 const nejButton = document.querySelector('.button-nej');
-const jaButton = document.querySelector('.button-ja');
 
-let x = window.innerWidth * 0.55;
-let y = window.innerHeight * 0.65;
-const speed = 14;
+let x = 0;
+let y = 0;
 const dangerRadius = 150;
-let hasMoved = false;
-
-// Gör knappen placerbar med left/top
-nejButton.style.position = "fixed";
-nejButton.style.left = x + "px";
-nejButton.style.top = y + "px";
 
 document.addEventListener('mousemove', (e) => {
   const rect = nejButton.getBoundingClientRect();
@@ -116,30 +108,23 @@ document.addEventListener('mousemove', (e) => {
     const nx = dx / distance;
     const ny = dy / distance;
 
-    x -= nx * speed;
-    y -= ny * speed;
-
-    if (!hasMoved) {
-      jaButton.style.transform = "scale(1.6)";
-      jaButton.style.transition = "transform 0.2s ease";
-      hasMoved = true;
-    }
+    x -= nx * 14;
+    y -= ny * 14;
   }
 
+  // === WRAP AROUND SKÄRMEN ===
   const screenW = window.innerWidth;
   const screenH = window.innerHeight;
 
-  // === RIKTIG WRAP AROUND ===
-  if (x + rect.width < 0) x = screenW;          // ut vänster → in från höger
-  if (x > screenW) x = -rect.width;            // ut höger → in från vänster
-  if (y + rect.height < 0) y = screenH;         // ut upp → in nerifrån
-  if (y > screenH) y = -rect.height;            // ut ner → in uppifrån
+  if (rect.right < 0) x += screenW + rect.width;
+  if (rect.left > screenW) x -= screenW + rect.width;
+  if (rect.bottom < 0) y += screenH + rect.height;
+  if (rect.top > screenH) y -= screenH + rect.height;
 
-  nejButton.style.left = x + "px";
-  nejButton.style.top = y + "px";
+  nejButton.style.transform = `translate(${x}px, ${y}px)`;
 });
 </script>
 
-
 </body>
 </html>
+
