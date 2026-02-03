@@ -145,6 +145,7 @@ body {
 const heartsContainer = document.getElementById('hearts');
 const heartCount = 30;
 
+/* Vanliga fallande hjärtan */
 for (let i = 0; i < heartCount; i++) {
   const heart = document.createElement('div');
   heart.classList.add('heart');
@@ -152,8 +153,25 @@ for (let i = 0; i < heartCount; i++) {
 
   heart.style.left = Math.random() * 100 + 'vw';
   heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-  heart.style.animationDuration = Math.random() * 6 + 10 + 's'; // 👈 långsammare
+  heart.style.animationDuration = Math.random() * 6 + 10 + 's';
   heart.style.animationDelay = Math.random() * 5 + 's';
+
+  heartsContainer.appendChild(heart);
+}
+
+/* === HJÄRTAN I MITTEN VID START === */
+const centerHeartCount = 10;
+
+for (let i = 0; i < centerHeartCount; i++) {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.innerHTML = '❤';
+
+  heart.style.left = 50 + (Math.random() * 20 - 10) + 'vw'; // runt mitten
+  heart.style.top = 40 + (Math.random() * 20 - 10) + 'vh'; // runt mitten
+  heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+  heart.style.animationDuration = Math.random() * 8 + 12 + 's';
+  heart.style.animationDelay = '0s';
 
   heartsContainer.appendChild(heart);
 }
@@ -184,7 +202,6 @@ jaButton.addEventListener('click', () => {
     heart.style.setProperty('--y', y + 'px');
 
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 1000);
   }
 });
@@ -209,17 +226,10 @@ document.addEventListener('mousemove', (e) => {
     y -= (dy / distance) * 14;
   }
 
-  const screenW = window.innerWidth;
-  const screenH = window.innerHeight;
-
-  if (rect.right < 0) x += screenW + rect.width;
-  if (rect.left > screenW) x -= screenW + rect.width;
-  if (rect.bottom < 0) y += screenH + rect.height;
-  if (rect.top > screenH) y -= screenH + rect.height;
-
   nejButton.style.transform = `translate(${x}px, ${y}px)`;
 });
 </script>
+
 
 </body>
 </html>
