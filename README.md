@@ -102,7 +102,7 @@ body {
 .button-nej {
   background-color: #dcdcdc;
   color: #333;
-  position: fixed; /* 👈 ändrad från relative till fixed */
+  position: fixed; /* 👈 ändrad för helskärm */
 }
 
 .button-container {
@@ -153,7 +153,7 @@ for (let i = 0; i < heartCount; i++) {
   heartsContainer.appendChild(heart);
 }
 
-/* === NEJ-KNAPPEN SOM FLYR (HELA SKÄRMEN) === */
+/* === NEJ-KNAPPEN SOM FLYR (HELA SKÄRMEN + HÖRNPADDING) === */
 const nejButton = document.querySelector('.button-nej');
 const dangerRadius = 150;
 
@@ -178,13 +178,13 @@ document.addEventListener('mousemove', (e) => {
     posY -= (dy / distance) * 14;
   }
 
-  // === GRÄNSER: HELA SKÄRMEN ===
-  const padding = 10;
-  const maxX = window.innerWidth - rect.width - padding;
-  const maxY = window.innerHeight - rect.height - padding;
+  // === HELA SKÄRMEN MED HÖRNPADDING ===
+  const cornerPadding = 20; // 👈 så den inte fastnar i hörnen
+  const maxX = window.innerWidth - rect.width - cornerPadding;
+  const maxY = window.innerHeight - rect.height - cornerPadding;
 
-  posX = Math.max(padding, Math.min(posX, maxX));
-  posY = Math.max(padding, Math.min(posY, maxY));
+  posX = Math.max(cornerPadding, Math.min(posX, maxX));
+  posY = Math.max(cornerPadding, Math.min(posY, maxY));
 
   nejButton.style.left = posX + 'px';
   nejButton.style.top = posY + 'px';
@@ -193,3 +193,4 @@ document.addEventListener('mousemove', (e) => {
 
 </body>
 </html>
+
