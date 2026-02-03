@@ -43,7 +43,6 @@ body {
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
-  position: relative; /* 👈 viktigt */
   z-index: 1;
 }
 
@@ -54,22 +53,13 @@ body {
   text-align: center;
 }
 
-/* === KNAPPAR === */
-.button-container {
-  display: flex;
-  justify-content: center;
-  gap: 200px;        /* 👈 stort mellanrum */
-  margin-top: 50px;  /* 👈 under texten */
-}
-
 .button {
-  width: 120px;
-  height: 65px;
+  width: 100px;
+  height: 60px;
   border-radius: 50px;
   border: none;
   cursor: pointer;
   font-family: 'Noto Sans JP', sans-serif;
-  font-size: 22px;
 }
 
 .button-ja {
@@ -77,9 +67,15 @@ body {
   color: white;
 }
 
+/* 🔽 ENDA ÄNDRINGEN ÄR HÄR */
 .button-nej {
   background: #dcdcdc;
-  position: absolute; /* 👈 inte fixed längre */
+}
+
+.button-container {
+  display: flex;
+  gap: 180px;
+  margin-top: 20px;
 }
 </style>
 </head>
@@ -91,7 +87,6 @@ body {
 <div class="center-box">
   <img src="https://thumbs.dreamstime.com/b/print-206284399.jpg" width="200">
   <div class="text-box">... vill du bli min valentine?</div>
-
   <div class="button-container">
     <button class="button button-ja">Ja</button>
     <button class="button button-nej">Nej</button>
@@ -111,15 +106,13 @@ for (let i = 0; i < 40; i++) {
   hearts.appendChild(h);
 }
 
-/* === NEJ-KNAPP SOM FLYR === */
+/* === NEJ-KNAPP MED RUNDADE HÖRN === */
 const btn = document.querySelector(".button-nej");
 const dangerRadius = 150;
+const cornerRadius = 120;
 
-let x = 520;
-let y = 380;
-
-btn.style.left = x + "px";
-btn.style.top = y + "px";
+let x = window.innerWidth / 2 + 100;
+let y = window.innerHeight / 2 + 100;
 
 document.addEventListener("mousemove", (e) => {
   const r = btn.getBoundingClientRect();
@@ -135,10 +128,37 @@ document.addEventListener("mousemove", (e) => {
     y -= (dy / d) * 14;
   }
 
-  const box = document.querySelector(".center-box").getBoundingClientRect();
+  const minX = 0;
+  const minY = 0;
+  const maxX = window.innerWidth - r.width;
+  const maxY = window.innerHeight - r.height;
 
-  x = Math.max(box.left, Math.min(x, box.right - r.width));
-  y = Math.max(box.top, Math.min(y, box.bottom - r.height));
+  x = Math.max(minX, Math.min(x, maxX));
+  y = Math.max(minY, Math.min(y, maxY));
+
+  const corners = [
+    { cx: minX + cornerRadius, cy: minY + cornerRadius },
+    { cx: maxX - cornerRadius, cy: minY + cornerRadius },
+    { cx: minX + cornerRadius, cy: maxY - cornerRadius },
+    { cx: maxX - cornerRadius, cy: maxY - cornerRadius }
+  ];
+
+  for (const c of corners) {
+    const vx = x + r.width / 2 - c.cx;
+    const vy = y + r.height / 2 - c.cy;
+    const dist = Math.hypot(vx, vy);
+
+    if (dist > cornerRadius &&
+        ((c.cx < window.innerWidth / 2 && x < c.cx) ||
+         (c.cx > window.innerWidth / 2 && x > c.cx)) &&
+        ((c.cy < window.innerHeight / 2 && y < c.cy) ||
+         (c.cy > window.innerHeight / 2 && y > c.cy))) {
+
+      const scale = cornerRadius / dist;
+      x = c.cx + vx * scale - r.width / 2;
+      y = c.cy + vy * scale - r.height / 2;
+    }
+  }
 
   btn.style.left = x + "px";
   btn.style.top = y + "px";
