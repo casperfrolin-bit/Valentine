@@ -62,7 +62,7 @@ body {
 .button-nej {
   background-color: #dcdcdc;
   color: #333;
-  position: relative;
+  position: fixed;   /* ← VIKTIGT: ändrat här */
 }
 
 .button-container {
@@ -90,11 +90,14 @@ body {
 const nejButton = document.querySelector('.button-nej');
 const jaButton = document.querySelector('.button-ja');
 
+// 🔹 Sätt startposition på Nej-knappen
+nejButton.style.left = "55%";
+nejButton.style.top = "65%";
+
 let x = 0;
 let y = 0;
 const dangerRadius = 150;
 
-// 🔹 Minnesflagga – så Ja bara växer EN gång
 let hasMoved = false;
 
 document.addEventListener('mousemove', (e) => {
@@ -115,7 +118,6 @@ document.addEventListener('mousemove', (e) => {
     x -= nx * 14;
     y -= ny * 14;
 
-    // 🔹 Gör Ja större – men bara första gången
     if (!hasMoved) {
       jaButton.style.transform = "scale(1.6)";
       jaButton.style.transition = "transform 0.2s ease";
