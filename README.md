@@ -66,10 +66,11 @@ body {
 /* === KNAPPAR === */
 .button-container {
   display: flex;
-  gap: 180px;
+  gap: 260px;          /* 👈 mer mellanrum */
   margin-top: 30px;
-  position: relative;
+  transform: translateX(-80px); /* 👈 flyttar knapparna åt vänster */
 }
+
 
 .button {
   width: 100px;
@@ -126,7 +127,7 @@ for (let i = 0; i < 45; i++) {
 /* === NEJ-KNAPP MED RUNDADE HÖRN === */
 const btn = document.getElementById("nej");
 const dangerRadius = 150;
-const cornerRadius = 120;
+const cornerRadius = 200;
 
 let rect = btn.getBoundingClientRect();
 let x = rect.left;
