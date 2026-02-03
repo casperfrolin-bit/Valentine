@@ -68,7 +68,7 @@ body {
 .button-container {
   display: flex;
   gap: 180px;
-  margin-top: 35px; /* Här flyttade vi ner knapparna 15 px */
+  margin-top: 35px;  /* ← flyttar ner knapparna 15 px */
 }
 </style>
 </head>
