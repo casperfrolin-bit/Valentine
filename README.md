@@ -13,6 +13,12 @@ body {
   align-items: center;
 }
 
+/* ====== 👉👉 HÄR KAN DU ÄNDRA MELLANRUMMET 👈👈 ====== */
+:root {
+  --btn-gap: 10px;   /* ←←← ÄNDRA DENNA SIFFRA FÖR MER/MINDRE AVSTÅND */
+}
+/* ===================================================== */
+
 /* === FALLANDE HJÄRTAN === */
 .hearts {
   position: fixed;
@@ -46,7 +52,6 @@ body {
   z-index: 1;
 }
 
-/* === TEXT === */
 .text-box {
   width: 700px;
   font-family: 'Noto Sans JP', sans-serif;
@@ -81,14 +86,16 @@ body {
   position: absolute;
 }
 
-/* === NY: SÄKER KNAPPLAYOUT (så de aldrig krockar) === */
+/* ====== 👉👉 ANDRA STÄLLET DU KAN ÄNDRA MELLANRUM 👈👈 ====== */
 .button-container {
   position: relative;
-  width: 500px;            /* bestämmer avståndet mellan dem */
   display: flex;
-  justify-content: space-between; /* tvingar isär dem */
+  align-items: center;
+  justify-content: center;
+  gap: var(--btn-gap);  /* ←←← kopplad till siffran ovan */
   margin-top: 20px;
 }
+/* ===================================================== */
 </style>
 </head>
 
@@ -128,19 +135,19 @@ for (let i = 0; i < 30; i++) spawnHeart();
 setInterval(spawnHeart, 200);
 
 
-/* =====================================================
-   NEJ-KNAPP SOM FLYR INNANFÖR "RUNDAD SKÄRMKANT"
-   (som på din bild)
-   ===================================================== */
+/* ==============================
+   NEJ-KNAPP SOM FLYR
+   + RUNDADE HÖRN
+   ============================== */
 
 const btn = document.querySelector(".button-nej");
 
-const dangerRadius = 180;   // hur nära musen den reagerar
-const pushStep = 18;        // hur snabbt den flyr
-const cornerRadius = 220;   // hur runda hörnen på SKÄRMEN är
-const screenPadding = 15;   // liten luft mot kanten
+const dangerRadius = 180;
+const pushStep = 18;
+const cornerRadius = 220;
+const screenPadding = 15;
 
-// Startposition = exakt där den redan ligger i layouten
+// Startposition = där knappen redan ligger i layouten
 const rectStart = btn.getBoundingClientRect();
 let x = rectStart.left;
 let y = rectStart.top;
@@ -155,13 +162,11 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - cy;
   const d = Math.hypot(dx, dy);
 
-  /* --- Flyr från musen --- */
   if (d < dangerRadius) {
     x -= (dx / d) * pushStep;
     y -= (dy / d) * pushStep;
   }
 
-  /* --- Fyrkantiga gränser först --- */
   const minX = screenPadding;
   const minY = screenPadding;
   const maxX = window.innerWidth - r.width - screenPadding;
@@ -170,11 +175,10 @@ document.addEventListener("mousemove", (e) => {
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
 
-  /* --- RUNDADE HÖRN PÅ SKÄRMKANTEN --- */
   const corners = [
-    { cx: minX + cornerRadius, cy: minY + cornerRadius }, 
-    { cx: maxX - cornerRadius, cy: minY + cornerRadius }, 
-    { cx: minX + cornerRadius, cy: maxY - cornerRadius }, 
+    { cx: minX + cornerRadius, cy: minY + cornerRadius },
+    { cx: maxX - cornerRadius, cy: minY + cornerRadius },
+    { cx: minX + cornerRadius, cy: maxY - cornerRadius },
     { cx: maxX - cornerRadius, cy: maxY - cornerRadius }
   ];
 
