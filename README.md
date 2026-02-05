@@ -1,4 +1,4 @@
-
+<!DOCTYPE html>
 <html lang="sv">
 <head>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@700&display=swap" rel="stylesheet">
@@ -73,7 +73,7 @@ body {
 .button-nej {
   background: #dcdcdc;
   position: absolute;
-  pointer-events: none; /* omöjlig att klicka */
+  pointer-events: none;
 }
 
 .button-container {
@@ -151,33 +151,31 @@ function spawnHeart() {
 for (let i = 0; i < 30; i++) spawnHeart();
 setInterval(spawnHeart, 200);
 
-/* === NEJ-KNAPP: RÖR SIG BARA NÄR MUSEN ÄR NÄRA === */
+/* === NEJ-KNAPP: STILLASTÅENDE → FLYR NÄR MUSEN ÄR NÄRA === */
 const btn = document.getElementById("nejBtn");
-const jaBtn = document.getElementById("jaBtn");
 
-let x = jaBtn.offsetWidth + 20;
+let x = 140;
 let y = 0;
-
-let lastMouseX = null;
-let lastMouseY = null;
-
-const activationRadius = 180;   // 🔥 hur nära musen måste vara
-const padding = 20;
-const cornerRadius = 180;
 
 btn.style.left = x + "px";
 btn.style.top = y + "px";
 
+let lastMouseX = null;
+let lastMouseY = null;
+
+const activationRadius = 160;
+const speedMultiplier = 1;
+const padding = 20;
+
 document.addEventListener("mousemove", e => {
-  const r = btn.getBoundingClientRect();
-  const cx = r.left + r.width / 2;
-  const cy = r.top + r.height / 2;
+  const rect = btn.getBoundingClientRect();
+  const bx = rect.left + rect.width / 2;
+  const by = rect.top + rect.height / 2;
 
-  const dxMouse = e.clientX - cx;
-  const dyMouse = e.clientY - cy;
-  const distance = Math.hypot(dxMouse, dyMouse);
+  const dx = e.clientX - bx;
+  const dy = e.clientY - by;
+  const distance = Math.hypot(dx, dy);
 
-  // Om musen är för långt bort → frys
   if (distance > activationRadius) {
     lastMouseX = e.clientX;
     lastMouseY = e.clientY;
@@ -190,57 +188,32 @@ document.addEventListener("mousemove", e => {
     return;
   }
 
-  // 🔥 exakt samma rörelse som musen
-  const dx = e.clientX - lastMouseX;
-  const dy = e.clientY - lastMouseY;
+  const mdx = e.clientX - lastMouseX;
+  const mdy = e.clientY - lastMouseY;
 
-  x += dx;
-  y += dy;
+  x -= mdx * speedMultiplier;
+  y -= mdy * speedMultiplier;
 
   lastMouseX = e.clientX;
   lastMouseY = e.clientY;
 
-  clampRounded();
+  keepInside();
   btn.style.left = x + "px";
   btn.style.top = y + "px";
 });
 
-/* === ROUNDED BOUNDS === */
-function clampRounded() {
+function keepInside() {
   const r = btn.getBoundingClientRect();
-
-  const minX = padding;
-  const minY = padding;
   const maxX = window.innerWidth - r.width - padding;
   const maxY = window.innerHeight - r.height - padding;
 
-  x = Math.max(minX, Math.min(x, maxX));
-  y = Math.max(minY, Math.min(y, maxY));
-
-  const corners = [
-    [minX + cornerRadius, minY + cornerRadius],
-    [maxX - cornerRadius, minY + cornerRadius],
-    [minX + cornerRadius, maxY - cornerRadius],
-    [maxX - cornerRadius, maxY - cornerRadius]
-  ];
-
-  const bx = x + r.width / 2;
-  const by = y + r.height / 2;
-
-  for (const [cx, cy] of corners) {
-    const vx = bx - cx;
-    const vy = by - cy;
-    const dist = Math.hypot(vx, vy);
-    if (dist < cornerRadius) {
-      const s = cornerRadius / (dist || 0.001);
-      x = cx + vx * s - r.width / 2;
-      y = cy + vy * s - r.height / 2;
-    }
-  }
+  x = Math.max(padding, Math.min(x, maxX));
+  y = Math.max(padding, Math.min(y, maxY));
 }
 
 /* === MODAL === */
 const modal = document.getElementById("modal");
+const jaBtn = document.getElementById("jaBtn");
 jaBtn.addEventListener("click", () => modal.style.display = "flex");
 function closeModal() { modal.style.display = "none"; }
 </script>
