@@ -15,7 +15,7 @@ body {
 
 /* ====== ÄNDRA MELLANRUMMET HÄR ====== */
 :root {
-  --btn-gap: 10px;   /* ←←← ändra för större/mindre avstånd */
+  --btn-gap: 10px;   /* ←←← ändra denna siffra */
 }
 /* ===================================== */
 
@@ -52,6 +52,7 @@ body {
   z-index: 1;
 }
 
+/* === TEXT === */
 .text-box {
   width: 700px;
   font-family: 'Noto Sans JP', sans-serif;
@@ -70,7 +71,6 @@ body {
   transition: transform 0.15s ease-out;
 }
 
-/* Ja-knapp */
 .button-ja {
   background: #ff69b4;
   color: white;
@@ -80,13 +80,12 @@ body {
   transform: scale(1.12);
 }
 
-/* Nej-knapp måste vara absolute för att kunna fly */
 .button-nej {
   background: #dcdcdc;
   position: absolute;
 }
 
-/* Layout så knapparna står bredvid varandra */
+/* layout så de står bredvid varandra */
 .button-container {
   position: relative;
   display: flex;
@@ -94,6 +93,39 @@ body {
   justify-content: center;
   gap: var(--btn-gap);
   margin-top: 20px;
+}
+
+/* ===== MODAL-RUTA (som din bild) ===== */
+.modal-bg {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: #111;
+  color: white;
+  padding: 20px 30px;
+  border-radius: 18px;
+  font-family: 'Noto Sans JP', sans-serif;
+  min-width: 280px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,.4);
+}
+
+.modal-btn {
+  margin-top: 12px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  border: none;
+  background: #e6f0ff;
+  color: #1b5fd1;
+  cursor: pointer;
+  font-weight: bold;
 }
 </style>
 </head>
@@ -107,15 +139,21 @@ body {
   <div class="text-box">... vill du bli min valentine?</div>
 
   <div class="button-container">
-    <button class="button button-ja">Ja</button>
-    <button class="button button-nej">Nej</button>
+    <button class="button button-ja" id="jaBtn">Ja</button>
+    <button class="button button-nej" id="nejBtn">Nej</button>
+  </div>
+</div>
+
+<!-- MODAL-RUTA -->
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div>OMGG JAAA 💖</div>
+    <button class="modal-btn" onclick="closeModal()">OK</button>
   </div>
 </div>
 
 <script>
-/* ==============================
-   OÄNDLIGA HJÄRTAN
-   ============================== */
+/* ===== OÄNDLIGA HJÄRTAN ===== */
 const hearts = document.getElementById("hearts");
 
 function spawnHeart() {
@@ -133,25 +171,20 @@ function spawnHeart() {
 for (let i = 0; i < 30; i++) spawnHeart();
 setInterval(spawnHeart, 200);
 
-
-/* =====================================================
-   NEJ-KNAPP SOM FLYR + SÄKER STARTPOSITION
-   ===================================================== */
-
-const btn = document.querySelector(".button-nej");
-const jaBtn = document.querySelector(".button-ja");
+/* ===== NEJ-KNAPP SOM FLYR ===== */
+const btn = document.getElementById("nejBtn");
+const jaBtn = document.getElementById("jaBtn");
 
 const dangerRadius = 180;
 const pushStep = 18;
 const cornerRadius = 220;
 const screenPadding = 15;
 
-/* ---- NY FIX: SÄKER STARTPOSITION ---- */
+/* --- SÄKER STARTPOSITION (så den alltid syns) --- */
 const jaRect = jaBtn.getBoundingClientRect();
-
-let x = jaRect.right + 10; // 10 px till höger om Ja
-let y = jaRect.top;        // samma höjd som Ja
-/* ------------------------------------ */
+let x = jaRect.right + 10;
+let y = jaRect.top;
+/* ----------------------------------------------- */
 
 document.addEventListener("mousemove", (e) => {
 
@@ -201,6 +234,17 @@ document.addEventListener("mousemove", (e) => {
   btn.style.left = x + "px";
   btn.style.top = y + "px";
 });
+
+/* ===== MODAL NÄR MAN TRYCKER JA ===== */
+const modal = document.getElementById("modal");
+
+jaBtn.addEventListener("click", () => {
+  modal.style.display = "flex";
+});
+
+function closeModal() {
+  modal.style.display = "none";
+}
 </script>
 
 </body>
