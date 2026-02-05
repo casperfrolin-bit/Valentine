@@ -63,7 +63,7 @@ body {
   transition: transform 0.15s ease-out;
 }
 
-/* === JA-KNAPP EFFEKT === */
+/* JA-knapp effekt */
 .button-ja {
   background: #ff69b4;
   color: white;
@@ -73,13 +73,12 @@ body {
   transform: scale(1.12);
 }
 
-/* === NEJ-KNAPP (MÅSTE VARA ABSOLUTE FÖR ATT KUNNA RÖRA SIG) === */
+/* Nej-knapp måste vara absolute för att röra sig */
 .button-nej {
   background: #dcdcdc;
   position: absolute;
 }
 
-/* container – bara layout (rörs inte av JS) */
 .button-container {
   display: flex;
   gap: 180px;
@@ -103,21 +102,40 @@ body {
 
 <script>
 /* ==============================
-   1 + 2) OMÖJLIG NEJ-KNAPP
-   MED MJUKA RUNDADE KANTER
+   OÄNDLIGA HJÄRTAN
+   ============================== */
+const hearts = document.getElementById("hearts");
+
+function spawnHeart() {
+  const h = document.createElement("div");
+  h.className = "heart";
+  h.textContent = "❤";
+  h.style.left = Math.random() * 100 + "vw";
+  h.style.fontSize = 12 + Math.random() * 18 + "px";
+  h.style.animationDuration = 6 + Math.random() * 6 + "s";
+  hearts.appendChild(h);
+
+  setTimeout(() => h.remove(), 12000);
+}
+
+for (let i = 0; i < 30; i++) spawnHeart();
+setInterval(spawnHeart, 200);
+
+
+/* ==============================
+   NEJ-KNAPP SOM FLYR + VÄGG-PUTT
+   (din nya logik – på rätt plats)
    ============================== */
 
 const btn = document.querySelector(".button-nej");
-const dangerRadius = 160;
-const cornerRadius = 140;
-const screenPadding = 10;
 
-// Sätt startposition exakt där knappen redan ligger
+const dangerRadius = 180;
+const pushStep = 18;
+
+// behåll exakt startposition
 const rectStart = btn.getBoundingClientRect();
 let x = rectStart.left;
 let y = rectStart.top;
-
-let lastMouse = { x: null, y: null };
 
 document.addEventListener("mousemove", (e) => {
 
@@ -129,84 +147,44 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - cy;
   const d = Math.hypot(dx, dy);
 
-  // === Flyr i SAMMA FART som musen när du är nära ===
   if (d < dangerRadius) {
-    if (lastMouse.x !== null) {
-      const mx = e.clientX - lastMouse.x;
-      const my = e.clientY - lastMouse.y;
-
-      x -= mx;
-      y -= my;
-    }
+    x -= (dx / d) * pushStep;
+    y -= (dy / d) * pushStep;
   }
 
-  lastMouse = { x: e.clientX, y: e.clientY };
+  const minX = 0;
+  const minY = 0;
+  const maxX = window.innerWidth - r.width;
+  const maxY = window.innerHeight - r.height;
 
-  // === Fyrkantiga gränser (men med mjuka hörn) ===
-  const minX = screenPadding;
-  const minY = screenPadding;
-  const maxX = window.innerWidth - r.width - screenPadding;
-  const maxY = window.innerHeight - r.height - screenPadding;
+  // === OSYNLIGA VÄGGAR MED PUTT ===
+  if (x <= minX) {
+    x = minX;
+    y += 25 * (Math.random() > 0.5 ? 1 : -1);
+  }
 
-  // först vanlig clamp
+  if (x >= maxX) {
+    x = maxX;
+    y += 25 * (Math.random() > 0.5 ? 1 : -1);
+  }
+
+  if (y <= minY) {
+    y = minY;
+    x += 25 * (Math.random() > 0.5 ? 1 : -1);
+  }
+
+  if (y >= maxY) {
+    y = maxY;
+    x += 25 * (Math.random() > 0.5 ? 1 : -1);
+  }
+
+  // håll inom skärmen
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
-
-  // Hörn som cirklar (så den inte fastnar)
-  const corners = [
-    { cx: minX + cornerRadius, cy: minY + cornerRadius },
-    { cx: maxX - cornerRadius, cy: minY + cornerRadius },
-    { cx: minX + cornerRadius, cy: maxY - cornerRadius },
-    { cx: maxX - cornerRadius, cy: maxY - cornerRadius }
-  ];
-
-  const bx = x + r.width / 2;
-  const by = y + r.height / 2;
-
-  for (const c of corners) {
-    const vx = bx - c.cx;
-    const vy = by - c.cy;
-    const dist = Math.hypot(vx, vy);
-
-    if (dist < cornerRadius) {
-      const scale = cornerRadius / (dist || 0.1);
-      x = c.cx + vx * scale - r.width / 2;
-      y = c.cy + vy * scale - r.height / 2;
-    }
-  }
 
   btn.style.left = x + "px";
   btn.style.top = y + "px";
 });
-
-
-/* ==============================
-   3) OÄNDLIGA HJÄRTAN
-   ============================== */
-
-const hearts = document.getElementById("hearts");
-
-function spawnHeart() {
-  const h = document.createElement("div");
-  h.className = "heart";
-  h.textContent = "❤";
-
-  h.style.left = Math.random() * 100 + "vw";
-  h.style.fontSize = 12 + Math.random() * 18 + "px";
-  h.style.animationDuration = 6 + Math.random() * 6 + "s";
-
-  hearts.appendChild(h);
-
-  // ta bort när den ramlat klart
-  setTimeout(() => h.remove(), 12000);
-}
-
-// start med några
-for (let i = 0; i < 30; i++) spawnHeart();
-
-// sedan NYA hela tiden
-setInterval(spawnHeart, 200);
-
 </script>
 
 </body>
