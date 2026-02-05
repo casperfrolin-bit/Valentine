@@ -46,6 +46,7 @@ body {
   z-index: 1;
 }
 
+/* === TEXT === */
 .text-box {
   width: 700px;
   font-family: 'Noto Sans JP', sans-serif;
@@ -53,6 +54,7 @@ body {
   text-align: center;
 }
 
+/* === KNAPPAR === */
 .button {
   width: 100px;
   height: 60px;
@@ -63,7 +65,7 @@ body {
   transition: transform 0.15s ease-out;
 }
 
-/* JA-knapp effekt */
+/* Ja-knapp */
 .button-ja {
   background: #ff69b4;
   color: white;
@@ -73,15 +75,18 @@ body {
   transform: scale(1.12);
 }
 
-/* Nej-knapp måste vara absolute för att röra sig */
+/* Nej-knapp måste vara absolute för att kunna fly */
 .button-nej {
   background: #dcdcdc;
   position: absolute;
 }
 
+/* === NY: SÄKER KNAPPLAYOUT (så de aldrig krockar) === */
 .button-container {
+  position: relative;
+  width: 500px;            /* bestämmer avståndet mellan dem */
   display: flex;
-  gap: 180px;
+  justify-content: space-between; /* tvingar isär dem */
   margin-top: 20px;
 }
 </style>
@@ -94,6 +99,7 @@ body {
 <div class="center-box">
   <img src="https://thumbs.dreamstime.com/b/print-206284399.jpg" width="200">
   <div class="text-box">... vill du bli min valentine?</div>
+
   <div class="button-container">
     <button class="button button-ja">Ja</button>
     <button class="button button-nej">Nej</button>
@@ -122,19 +128,19 @@ for (let i = 0; i < 30; i++) spawnHeart();
 setInterval(spawnHeart, 200);
 
 
-/* ==============================
-   NEJ-KNAPP SOM FLYR
-   + RUNDADE HÖRN (INGEN STUDS)
-   ============================== */
+/* =====================================================
+   NEJ-KNAPP SOM FLYR INNANFÖR "RUNDAD SKÄRMKANT"
+   (som på din bild)
+   ===================================================== */
 
 const btn = document.querySelector(".button-nej");
 
 const dangerRadius = 180;   // hur nära musen den reagerar
 const pushStep = 18;        // hur snabbt den flyr
-const cornerRadius = 140;   // hur "runda" hörnen är
-const screenPadding = 10;   // lite marginal från kanten
+const cornerRadius = 220;   // hur runda hörnen på SKÄRMEN är
+const screenPadding = 15;   // liten luft mot kanten
 
-// Behåll exakt startposition
+// Startposition = exakt där den redan ligger i layouten
 const rectStart = btn.getBoundingClientRect();
 let x = rectStart.left;
 let y = rectStart.top;
@@ -149,13 +155,13 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - cy;
   const d = Math.hypot(dx, dy);
 
-  // === FLYR FRÅN MUSEN (som du vill) ===
+  /* --- Flyr från musen --- */
   if (d < dangerRadius) {
     x -= (dx / d) * pushStep;
     y -= (dy / d) * pushStep;
   }
 
-  // Fyrkantiga gränser först
+  /* --- Fyrkantiga gränser först --- */
   const minX = screenPadding;
   const minY = screenPadding;
   const maxX = window.innerWidth - r.width - screenPadding;
@@ -164,12 +170,12 @@ document.addEventListener("mousemove", (e) => {
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
 
-  // === MJUKA RUNDADE HÖRN (så den inte fastnar) ===
+  /* --- RUNDADE HÖRN PÅ SKÄRMKANTEN --- */
   const corners = [
-    { cx: minX + cornerRadius, cy: minY + cornerRadius }, // uppe vänster
-    { cx: maxX - cornerRadius, cy: minY + cornerRadius }, // uppe höger
-    { cx: minX + cornerRadius, cy: maxY - cornerRadius }, // nere vänster
-    { cx: maxX - cornerRadius, cy: maxY - cornerRadius }  // nere höger
+    { cx: minX + cornerRadius, cy: minY + cornerRadius }, 
+    { cx: maxX - cornerRadius, cy: minY + cornerRadius }, 
+    { cx: minX + cornerRadius, cy: maxY - cornerRadius }, 
+    { cx: maxX - cornerRadius, cy: maxY - cornerRadius }
   ];
 
   const bx = x + r.width / 2;
