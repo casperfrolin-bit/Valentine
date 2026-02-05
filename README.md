@@ -13,11 +13,11 @@ body {
   align-items: center;
 }
 
-/* ====== 👉👉 HÄR KAN DU ÄNDRA MELLANRUMMET 👈👈 ====== */
+/* ====== ÄNDRA MELLANRUMMET HÄR ====== */
 :root {
-  --btn-gap: 10px;   /* ←←← ÄNDRA DENNA SIFFRA FÖR MER/MINDRE AVSTÅND */
+  --btn-gap: 10px;   /* ←←← ändra för större/mindre avstånd */
 }
-/* ===================================================== */
+/* ===================================== */
 
 /* === FALLANDE HJÄRTAN === */
 .hearts {
@@ -86,16 +86,15 @@ body {
   position: absolute;
 }
 
-/* ====== 👉👉 ANDRA STÄLLET DU KAN ÄNDRA MELLANRUM 👈👈 ====== */
+/* Layout så knapparna står bredvid varandra */
 .button-container {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--btn-gap);  /* ←←← kopplad till siffran ovan */
+  gap: var(--btn-gap);
   margin-top: 20px;
 }
-/* ===================================================== */
 </style>
 </head>
 
@@ -135,22 +134,24 @@ for (let i = 0; i < 30; i++) spawnHeart();
 setInterval(spawnHeart, 200);
 
 
-/* ==============================
-   NEJ-KNAPP SOM FLYR
-   + RUNDADE HÖRN
-   ============================== */
+/* =====================================================
+   NEJ-KNAPP SOM FLYR + SÄKER STARTPOSITION
+   ===================================================== */
 
 const btn = document.querySelector(".button-nej");
+const jaBtn = document.querySelector(".button-ja");
 
 const dangerRadius = 180;
 const pushStep = 18;
 const cornerRadius = 220;
 const screenPadding = 15;
 
-// Startposition = där knappen redan ligger i layouten
-const rectStart = btn.getBoundingClientRect();
-let x = rectStart.left;
-let y = rectStart.top;
+/* ---- NY FIX: SÄKER STARTPOSITION ---- */
+const jaRect = jaBtn.getBoundingClientRect();
+
+let x = jaRect.right + 10; // 10 px till höger om Ja
+let y = jaRect.top;        // samma höjd som Ja
+/* ------------------------------------ */
 
 document.addEventListener("mousemove", (e) => {
 
