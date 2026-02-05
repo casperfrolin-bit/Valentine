@@ -123,16 +123,18 @@ setInterval(spawnHeart, 200);
 
 
 /* ==============================
-   NEJ-KNAPP SOM FLYR + VÄGG-PUTT
-   (din nya logik – på rätt plats)
+   NEJ-KNAPP SOM FLYR
+   + RUNDADE HÖRN (INGEN STUDS)
    ============================== */
 
 const btn = document.querySelector(".button-nej");
 
-const dangerRadius = 180;
-const pushStep = 18;
+const dangerRadius = 180;   // hur nära musen den reagerar
+const pushStep = 18;        // hur snabbt den flyr
+const cornerRadius = 140;   // hur "runda" hörnen är
+const screenPadding = 10;   // lite marginal från kanten
 
-// behåll exakt startposition
+// Behåll exakt startposition
 const rectStart = btn.getBoundingClientRect();
 let x = rectStart.left;
 let y = rectStart.top;
@@ -147,40 +149,43 @@ document.addEventListener("mousemove", (e) => {
   const dy = e.clientY - cy;
   const d = Math.hypot(dx, dy);
 
+  // === FLYR FRÅN MUSEN (som du vill) ===
   if (d < dangerRadius) {
     x -= (dx / d) * pushStep;
     y -= (dy / d) * pushStep;
   }
 
-  const minX = 0;
-  const minY = 0;
-  const maxX = window.innerWidth - r.width;
-  const maxY = window.innerHeight - r.height;
+  // Fyrkantiga gränser först
+  const minX = screenPadding;
+  const minY = screenPadding;
+  const maxX = window.innerWidth - r.width - screenPadding;
+  const maxY = window.innerHeight - r.height - screenPadding;
 
-  // === OSYNLIGA VÄGGAR MED PUTT ===
-  if (x <= minX) {
-    x = minX;
-    y += 25 * (Math.random() > 0.5 ? 1 : -1);
-  }
-
-  if (x >= maxX) {
-    x = maxX;
-    y += 25 * (Math.random() > 0.5 ? 1 : -1);
-  }
-
-  if (y <= minY) {
-    y = minY;
-    x += 25 * (Math.random() > 0.5 ? 1 : -1);
-  }
-
-  if (y >= maxY) {
-    y = maxY;
-    x += 25 * (Math.random() > 0.5 ? 1 : -1);
-  }
-
-  // håll inom skärmen
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
+
+  // === MJUKA RUNDADE HÖRN (så den inte fastnar) ===
+  const corners = [
+    { cx: minX + cornerRadius, cy: minY + cornerRadius }, // uppe vänster
+    { cx: maxX - cornerRadius, cy: minY + cornerRadius }, // uppe höger
+    { cx: minX + cornerRadius, cy: maxY - cornerRadius }, // nere vänster
+    { cx: maxX - cornerRadius, cy: maxY - cornerRadius }  // nere höger
+  ];
+
+  const bx = x + r.width / 2;
+  const by = y + r.height / 2;
+
+  for (const c of corners) {
+    const vx = bx - c.cx;
+    const vy = by - c.cy;
+    const dist = Math.hypot(vx, vy);
+
+    if (dist < cornerRadius) {
+      const scale = cornerRadius / (dist || 0.1);
+      x = c.cx + vx * scale - r.width / 2;
+      y = c.cy + vy * scale - r.height / 2;
+    }
+  }
 
   btn.style.left = x + "px";
   btn.style.top = y + "px";
