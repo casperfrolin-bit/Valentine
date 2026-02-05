@@ -82,7 +82,6 @@ body {
 
 .button-nej {
   background: #dcdcdc;
-  position: absolute;
 }
 
 /* layout så de står bredvid varandra */
@@ -180,14 +179,17 @@ const pushStep = 18;
 const cornerRadius = 220;
 const screenPadding = 15;
 
-/* --- SÄKER STARTPOSITION (så den alltid syns) --- */
-const jaRect = jaBtn.getBoundingClientRect();
-let x = jaRect.right + 10;
-let y = jaRect.top;
-/* ----------------------------------------------- */
+// Startposition på mitten under texten
+const container = document.querySelector(".button-container");
+const containerRect = container.getBoundingClientRect();
+let x = 0;
+let y = 0;
+
+btn.style.position = 'absolute';
+btn.style.left = jaBtn.offsetWidth + parseInt(getComputedStyle(document.documentElement).getPropertyValue('--btn-gap')) + 'px';
+btn.style.top = '0px';
 
 document.addEventListener("mousemove", (e) => {
-
   const r = btn.getBoundingClientRect();
   const cx = r.left + r.width / 2;
   const cy = r.top + r.height / 2;
@@ -209,6 +211,7 @@ document.addEventListener("mousemove", (e) => {
   x = Math.max(minX, Math.min(x, maxX));
   y = Math.max(minY, Math.min(y, maxY));
 
+  // Hörnbegränsning
   const corners = [
     { cx: minX + cornerRadius, cy: minY + cornerRadius },
     { cx: maxX - cornerRadius, cy: minY + cornerRadius },
@@ -231,8 +234,8 @@ document.addEventListener("mousemove", (e) => {
     }
   }
 
-  btn.style.left = x + "px";
-  btn.style.top = y + "px";
+  btn.style.left = x + 'px';
+  btn.style.top = y + 'px';
 });
 
 /* ===== MODAL NÄR MAN TRYCKER JA ===== */
