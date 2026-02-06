@@ -140,7 +140,7 @@ body {
 
 <div class="modal-bg" id="modal">
   <div class="modal-box">
-    <div>OMGG JAAA 💖</div>
+    <div>YAY</div>
     <button class="modal-btn" onclick="closeModal()">OK</button>
   </div>
 </div>
